@@ -1,0 +1,5 @@
+.venv/*
+car-rater.spec
+dist/*
+build/*
+**/__pycache__/**
