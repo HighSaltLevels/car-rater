@@ -8,6 +8,10 @@ from ui.base_window import BaseWindow
 class DeleteCarWindow(BaseWindow):
     """Delete Car Window"""
 
+    def __init__(self, car_file, car_list, title):
+        self._car_list = car_list
+        super().__init__(car_file, title)
+
     def build_ui(self):
         """Build the UI"""
 
@@ -43,5 +47,5 @@ class DeleteCarWindow(BaseWindow):
     def _delete(self):
         """Delete the selected car from the list"""
         car = self._car_list.cars[self._elements["box"].currentIndex()]
-        self.car_list.delete_car(car)
+        self._car_list.delete_car(car)
         self.close()
