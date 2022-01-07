@@ -1,21 +1,20 @@
 """ Main Window Class """
 
-from pathlib import Path
 import sys
 
-from PyQt5.QtWidgets import QWidget, QApplication, QGridLayout, QPushButton, QTextEdit
 from PyQt5.QtGui import QIcon
+from PyQt5.QtWidgets import QWidget, QApplication, QGridLayout, QPushButton, QTextEdit
 
-from car_list import CarList
+from car_file import CarFile
+from constants import ICON_PATH
 from ui.add_window import AddCarWindow
 from ui.delete_window import DeleteCarWindow
-from ui.select_window import SelectCarWindow
+from ui.select_window import SelectCarWindow, SelectCategoryWindow
 from ui.update_window import UpdateCarWindow
 from version import VERSION
 
 
 APP = QApplication([])
-ICON_PATH = f"{Path.home()}/.config/car_rater/icon.ico"
 
 
 class MainWindow(QWidget):
@@ -25,15 +24,17 @@ class MainWindow(QWidget):
         super().__init__(parent)
         self.setWindowTitle(title)
         self.setWindowIcon(QIcon(ICON_PATH))
-        self.car_list = CarList()
+        self.car_file = CarFile()
         self.elements = self.build_ui()
 
     def build_ui(self):
         """
         Build the UI and return a dict mapping of elements
         """
-        grid = QGridLayout()
-        self.setLayout(grid)
+        grid_main = QGridLayout()
+        grid_left = QGridLayout()
+        grid_right = QGridLayout()
+        self.setLayout(grid_main)
 
         add = QPushButton("Add Car", self)
         add.clicked.connect(self._add_car)
@@ -42,30 +43,59 @@ class MainWindow(QWidget):
         update = QPushButton("Update Car", self)
         update.clicked.connect(self._update_car)
 
-        cars = QTextEdit(self)
-        cars.setFontFamily("Courier")
-        cars.setMinimumWidth(725)
-        cars.setMinimumHeight(300)
-        cars.setReadOnly(True)
-        cars.setText(str(self.car_list))
+        chevies = QTextEdit(self)
+        fords = QTextEdit(self)
+        mopars = QTextEdit(self)
+        trucks = QTextEdit(self)
+        other = QTextEdit(self)
+
+        for text_edit in [chevies, fords, mopars, trucks, other]:
+            text_edit.setFontFamily("Courier")
+            text_edit.setMinimumWidth(725)
+            text_edit.setMinimumHeight(300)
+            text_edit.setReadOnly(True)
+
+        chevies.setText(str(self.car_file.chevy_list))
+        fords.setText(str(self.car_file.ford_list))
+        mopars.setText(str(self.car_file.mopar_list))
+        trucks.setText(str(self.car_file.truck_list))
+        other.setText(str(self.car_file.other_list))
 
         close = QPushButton("Close", self)
         close.clicked.connect(self.close)
 
-        grid.addWidget(add, 0, 0)
-        grid.addWidget(update, 1, 0)
-        grid.addWidget(delete, 2, 0)
-        grid.addWidget(cars, 3, 0)
-        grid.addWidget(close, 4, 0)
+        grid_left.addWidget(add, 0, 0)
+        grid_left.addWidget(update, 1, 0)
+        grid_left.addWidget(delete, 2, 0)
+        grid_left.addWidget(close, 3, 0)
+        grid_left.addWidget(fords, 4, 0)
+        grid_left.addWidget(trucks, 5, 0)
+
+        grid_right.addWidget(chevies, 0, 0)
+        grid_right.addWidget(mopars, 1, 0)
+        grid_right.addWidget(other, 2, 0)
+
+        grid_main.addLayout(grid_left, 0, 0)
+        grid_main.addLayout(grid_right, 0, 1)
 
         return {
-            "grid": grid,
+            "grids": {
+                "main": grid_main,
+                "left": grid_left,
+                "right": grid_right,
+            },
             "buttons": {
                 "add": add,
                 "delete": delete,
                 "update": update,
             },
-            "text_edit": cars,
+            "text_edits": {
+                "Chevy": chevies,
+                "Ford": fords,
+                "Mopar": mopars,
+                "Truck": trucks,
+                "Other": other,
+            },
         }
 
     def start(self):
@@ -80,31 +110,54 @@ class MainWindow(QWidget):
         Show the Add Car Window
         """
         self.setEnabled(False)
-        add_window = AddCarWindow(self.car_list, "Add a Car")
+        add_window = AddCarWindow(self.car_file, "Add a Car")
         add_window.exec_()
         add_window.show()
-        self.setEnabled(True)
 
-        self.elements["text_edit"].setText(str(self.car_list))
+        car_list = add_window.selected_list
+        if car_list is not None:
+            self.elements["text_edits"][car_list.category].setText(str(car_list))
+
+        self.setEnabled(True)
 
     def _delete_car(self):
         """
         Show the Delete Car Window
         """
         self.setEnabled(False)
-        delete_window = DeleteCarWindow(self.car_list, "Delete a Car")
-        delete_window.exec_()
-        delete_window.show()
-        self.setEnabled(True)
+        select_window = SelectCategoryWindow(self.car_file, "Select a Category")
+        select_window.exec_()
+        select_window.show()
 
-        self.elements["text_edit"].setText(str(self.car_list))
+        car_list = select_window.car_list
+        select_window.close()
+
+        if car_list is not None:
+            delete_window = DeleteCarWindow(self.car_file, car_list, "Delete a Car")
+            delete_window.exec_()
+            delete_window.show()
+            self.elements["text_edits"][car_list.category].setText(str(car_list))
+
+        self.setEnabled(True)
 
     def _update_car(self):
         """
         Show the Update Car Window
         """
         self.setEnabled(False)
-        select_window = SelectCarWindow(self.car_list, "Select a Car")
+
+        select_window = SelectCategoryWindow(self.car_file, "Select a Category")
+        select_window.exec_()
+        select_window.show()
+
+        car_list = select_window.car_list
+        select_window.close()
+        # Exit early if they hit cancel
+        if car_list is None:
+            self.setEnabled(True)
+            return
+
+        select_window = SelectCarWindow(self.car_file, car_list, "Select a Car")
         select_window.exec_()
         select_window.show()
 
@@ -112,9 +165,11 @@ class MainWindow(QWidget):
         select_window.close()
 
         if car is not None:
-            update_window = UpdateCarWindow(self.car_list, "Update a Car", car)
+            update_window = UpdateCarWindow(
+                self.car_file, car_list, "Update a Car", car
+            )
             update_window.exec_()
             update_window.show()
-            self.elements["text_edit"].setText(str(self.car_list))
+            self.elements["text_edits"][car_list.category].setText(str(car_list))
 
         self.setEnabled(True)

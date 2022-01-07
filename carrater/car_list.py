@@ -7,16 +7,17 @@ from pathlib import Path
 from car import Car
 
 CAR_PATH = f"{Path.home()}/.config/car_rater"
-CAR_FILE = f"{CAR_PATH}/carlist.json"
 
 
 class CarList:
     """CarList class"""
 
-    def __init__(self):
+    def __init__(self, category):
+        self._category = category
         self._cars = []
+        self._path = f"{CAR_PATH}/{category}.json"
 
-        if not os.path.isfile(CAR_FILE):
+        if not os.path.isfile(self._path):
             self.create_car_file()
 
         else:
@@ -26,28 +27,37 @@ class CarList:
 
     def __str__(self):
         """Return text box friendly list of cars"""
-        return_str = (
-            "Owner                          | Category | Kind of Car                       "
+        return_str = "\n"
+        return_str += f"{self._category}".center(83)
+        return_str += "\n\n"
+        return_str += 83 * "="
+        return_str += "\n"
+        return_str += (
+            "Owner                          | Year | Kind of Car                       "
             "| Score |\n"
         )
-        return_str += f"{87 * '-'}\n"
+        return_str += f"{83 * '-'}\n"
         for car in self._cars:
             return_str += (
-                f"{car.owner:30} | {car.category:8} | {car.kind:33} | {car.score:5} |\n"
+                f"{car.owner:30} | {car.year:4} | {car.kind:33} | {car.score:5} |\n"
             )
 
         return return_str
+
+    @property
+    def category(self):
+        """Make category read only"""
+        return self._category
 
     @property
     def cars(self):
         """Return the list of cars"""
         return self._cars
 
-    @staticmethod
-    def create_car_file():
+    def create_car_file(self):
         """Create a brand new car file"""
         os.makedirs(CAR_PATH, exist_ok=True)
-        with open(CAR_FILE, "w", encoding="utf-8"):
+        with open(self._path, "w", encoding="utf-8"):
             pass
 
     def add_car(self, car):
@@ -66,7 +76,7 @@ class CarList:
     def load(self):
         """Load the current data from disk"""
         try:
-            with open(CAR_FILE, encoding="utf-8") as car_file:
+            with open(self._path, encoding="utf-8") as car_file:
                 self._cars = [Car().from_dict(car) for car in json.load(car_file)]
 
         except json.decoder.JSONDecodeError:
@@ -92,24 +102,5 @@ class CarList:
     def write(self):
         """Write the current cars to disk"""
         cars = [car.to_dict() for car in self._cars]
-        with open(CAR_FILE, "w", encoding="utf-8") as car_file:
+        with open(self._path, "w", encoding="utf-8") as car_file:
             car_file.write(json.dumps(cars))
-
-
-def get_longest_str(cars):
-    """Function for getting the longest of each string"""
-    longest_owner = 0
-    longest_category = 0
-    longest_kind = 0
-
-    for car in cars:
-        if len(car.owner) > longest_owner:
-            longest_owner = len(car.owner)
-
-        if len(car.category) > longest_category:
-            longest_category = len(car.category)
-
-        if len(car.kind) > longest_kind:
-            longest_kind = len(car.kind)
-
-    return longest_owner + 2, longest_category + 2, longest_kind + 2

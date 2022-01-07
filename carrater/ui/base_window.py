@@ -1,7 +1,9 @@
 """ GUI class base for other windows """
 
+from PyQt5.QtGui import QIcon
 from PyQt5.QtWidgets import QDialog
 
+from constants import ICON_PATH
 from errors import show_error
 
 
@@ -12,10 +14,11 @@ KIND_MAX_LEN = 33
 class BaseWindow(QDialog):
     """Base Window class"""
 
-    def __init__(self, car_list, title=""):
+    def __init__(self, car_file, title=""):
         super().__init__(None)
         self.setWindowTitle(title)
-        self._car_list = car_list
+        self.setWindowIcon(QIcon(ICON_PATH))
+        self._car_file = car_file
         self._elements = self.build_ui()
 
     def build_ui(self):
@@ -23,9 +26,9 @@ class BaseWindow(QDialog):
         raise NotImplementedError("Subclasses must implement build_ui")
 
     @property
-    def car_list(self):
-        """Make the car_list a property"""
-        return self._car_list
+    def car_file(self):
+        """Make the car_file a property"""
+        return self._car_file
 
     @staticmethod
     def is_valid(owner, kind):
