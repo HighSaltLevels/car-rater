@@ -4,7 +4,7 @@ import sys
 
 from PyQt5.QtCore import Qt
 from PyQt5.QtGui import QIcon
-from PyQt5.QtWidgets import QWidget, QApplication, QGridLayout, QPushButton, QTextEdit
+from PyQt5.QtWidgets import QWidget, QApplication, QGridLayout, QPushButton, QTextEdit, QTabWidget
 
 from car_file import CarFile
 from constants import ICON_PATH
@@ -33,8 +33,6 @@ class MainWindow(QWidget):
         Build the UI and return a dict mapping of elements
         """
         grid_main = QGridLayout()
-        grid_left = QGridLayout()
-        grid_right = QGridLayout()
         self.setLayout(grid_main)
 
         add = QPushButton("Add Car", self)
@@ -49,6 +47,13 @@ class MainWindow(QWidget):
         mopars = QTextEdit(self)
         trucks = QTextEdit(self)
         other = QTextEdit(self)
+
+        tabs = QTabWidget()
+        tabs.addTab(chevies, "Chevies")
+        tabs.addTab(fords, "Fords")
+        tabs.addTab(mopars, "Mopars")
+        tabs.addTab(trucks, "Trucks")
+        tabs.addTab(other, "Other")
 
         for text_edit in [chevies, fords, mopars, trucks, other]:
             text_edit.setFontFamily("Courier")
@@ -65,25 +70,15 @@ class MainWindow(QWidget):
         close = QPushButton("Close", self)
         close.clicked.connect(self.close)
 
-        grid_left.addWidget(add, 0, 0)
-        grid_left.addWidget(update, 1, 0)
-        grid_left.addWidget(delete, 2, 0)
-        grid_left.addWidget(close, 3, 0)
-        grid_left.addWidget(fords, 4, 0, Qt.AlignCenter)
-        grid_left.addWidget(trucks, 5, 0, Qt.AlignCenter)
-
-        grid_right.addWidget(chevies, 0, 0, Qt.AlignCenter)
-        grid_right.addWidget(mopars, 1, 0, Qt.AlignCenter)
-        grid_right.addWidget(other, 2, 0, Qt.AlignCenter)
-
-        grid_main.addLayout(grid_left, 0, 0, Qt.AlignCenter)
-        grid_main.addLayout(grid_right, 0, 1, Qt.AlignCenter)
+        grid_main.addWidget(add, 0, 0)
+        grid_main.addWidget(update, 1, 0)
+        grid_main.addWidget(delete, 2, 0)
+        grid_main.addWidget(close, 3, 0)
+        grid_main.addWidget(tabs, 4, 0)
 
         return {
             "grids": {
                 "main": grid_main,
-                "left": grid_left,
-                "right": grid_right,
             },
             "buttons": {
                 "add": add,
