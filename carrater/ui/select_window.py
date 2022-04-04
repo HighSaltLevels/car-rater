@@ -1,5 +1,6 @@
 """ GUI class for the Select Car Window """
 
+from PyQt5.QtCore import Qt
 from PyQt5.QtWidgets import QGridLayout, QLabel, QComboBox, QPushButton
 
 from constants import CATEGORIES
@@ -30,10 +31,10 @@ class SelectCarWindow(BaseWindow):
         btn_cancel = QPushButton("Cancel", self)
         btn_cancel.clicked.connect(self.close)
 
-        grid.addWidget(lbl, 0, 0, 1, 1)
-        grid.addWidget(box, 0, 1, 1, 2)
-        grid.addWidget(btn_cancel, 1, 0, 2, 1)
-        grid.addWidget(btn_select, 1, 1, 2, 2)
+        grid.addWidget(lbl, 0, 0, 1, 1, Qt.AlignCenter)
+        grid.addWidget(box, 0, 1, 1, 2, Qt.AlignCenter)
+        grid.addWidget(btn_cancel, 1, 0, 2, 1, Qt.AlignCenter)
+        grid.addWidget(btn_select, 1, 1, 2, 2, Qt.AlignCenter)
 
         return {
             "grid": grid,

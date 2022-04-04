@@ -2,6 +2,7 @@
 
 from datetime import date
 
+from PyQt5.QtCore import Qt
 from PyQt5.QtWidgets import (
     QGridLayout,
     QLabel,
@@ -61,18 +62,18 @@ class UpdateCarWindow(BaseWindow):
         btn_cancel = QPushButton("Cancel", self)
         btn_cancel.clicked.connect(self.close)
 
-        grid.addWidget(lbl_owner, 0, 0)
-        grid.addWidget(edit_owner, 0, 1)
-        grid.addWidget(lbl_categories, 1, 0)
-        grid.addWidget(box_categories, 1, 1)
-        grid.addWidget(lbl_year, 2, 0)
-        grid.addWidget(spin_box_year, 2, 1)
-        grid.addWidget(lbl_kind, 3, 0)
-        grid.addWidget(edit_kind, 3, 1)
-        grid.addWidget(lbl_score, 4, 0)
-        grid.addWidget(spin_box_score, 4, 1)
-        grid.addWidget(btn_add, 5, 0)
-        grid.addWidget(btn_cancel, 5, 1)
+        grid.addWidget(lbl_owner, 0, 0, Qt.AlignCenter)
+        grid.addWidget(edit_owner, 0, 1, Qt.AlignCenter)
+        grid.addWidget(lbl_categories, 1, 0, Qt.AlignCenter)
+        grid.addWidget(box_categories, 1, 1, Qt.AlignCenter)
+        grid.addWidget(lbl_year, 2, 0, Qt.AlignCenter)
+        grid.addWidget(spin_box_year, 2, 1, Qt.AlignCenter)
+        grid.addWidget(lbl_kind, 3, 0, Qt.AlignCenter)
+        grid.addWidget(edit_kind, 3, 1, Qt.AlignCenter)
+        grid.addWidget(lbl_score, 4, 0, Qt.AlignCenter)
+        grid.addWidget(spin_box_score, 4, 1, Qt.AlignCenter)
+        grid.addWidget(btn_add, 5, 0, Qt.AlignCenter)
+        grid.addWidget(btn_cancel, 5, 1, Qt.AlignCenter)
 
         return {
             "grid": grid,
