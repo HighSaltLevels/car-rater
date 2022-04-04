@@ -2,6 +2,7 @@
 
 import sys
 
+from PyQt5.QtCore import Qt
 from PyQt5.QtGui import QIcon
 from PyQt5.QtWidgets import QWidget, QApplication, QGridLayout, QPushButton, QTextEdit
 
@@ -51,8 +52,8 @@ class MainWindow(QWidget):
 
         for text_edit in [chevies, fords, mopars, trucks, other]:
             text_edit.setFontFamily("Courier")
-            text_edit.setMinimumWidth(725)
-            text_edit.setMinimumHeight(300)
+            text_edit.setMinimumWidth(500)
+            text_edit.setMinimumHeight(200)
             text_edit.setReadOnly(True)
 
         chevies.setText(str(self.car_file.chevy_list))
@@ -68,15 +69,15 @@ class MainWindow(QWidget):
         grid_left.addWidget(update, 1, 0)
         grid_left.addWidget(delete, 2, 0)
         grid_left.addWidget(close, 3, 0)
-        grid_left.addWidget(fords, 4, 0)
-        grid_left.addWidget(trucks, 5, 0)
+        grid_left.addWidget(fords, 4, 0, Qt.AlignCenter)
+        grid_left.addWidget(trucks, 5, 0, Qt.AlignCenter)
 
-        grid_right.addWidget(chevies, 0, 0)
-        grid_right.addWidget(mopars, 1, 0)
-        grid_right.addWidget(other, 2, 0)
+        grid_right.addWidget(chevies, 0, 0, Qt.AlignCenter)
+        grid_right.addWidget(mopars, 1, 0, Qt.AlignCenter)
+        grid_right.addWidget(other, 2, 0, Qt.AlignCenter)
 
-        grid_main.addLayout(grid_left, 0, 0)
-        grid_main.addLayout(grid_right, 0, 1)
+        grid_main.addLayout(grid_left, 0, 0, Qt.AlignCenter)
+        grid_main.addLayout(grid_right, 0, 1, Qt.AlignCenter)
 
         return {
             "grids": {

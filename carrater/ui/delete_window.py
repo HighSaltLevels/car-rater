@@ -1,5 +1,6 @@
 """ GUI class for the Delete Car Window """
 
+from PyQt5.QtCore import Qt
 from PyQt5.QtWidgets import QComboBox, QLabel, QGridLayout, QPushButton
 
 from ui.base_window import BaseWindow
@@ -29,10 +30,10 @@ class DeleteCarWindow(BaseWindow):
         btn_cancel = QPushButton("Cancel", self)
         btn_cancel.clicked.connect(self.close)
 
-        grid.addWidget(lbl, 0, 0, 1, 1)
-        grid.addWidget(box, 0, 1, 1, 2)
-        grid.addWidget(btn_cancel, 1, 0, 2, 1)
-        grid.addWidget(btn_delete, 1, 1, 2, 2)
+        grid.addWidget(lbl, 0, 0, 1, 1, Qt.AlignCenter)
+        grid.addWidget(box, 0, 1, 1, 2, Qt.AlignCenter)
+        grid.addWidget(btn_cancel, 1, 0, 2, 1, Qt.AlignCenter)
+        grid.addWidget(btn_delete, 1, 1, 2, 2, Qt.AlignCenter)
 
         return {
             "grid": grid,

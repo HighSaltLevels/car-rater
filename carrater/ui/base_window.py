@@ -7,8 +7,8 @@ from constants import ICON_PATH
 from errors import show_error
 
 
-OWNER_MAX_LEN = 30
-KIND_MAX_LEN = 33
+OWNER_MAX_LEN = 16
+KIND_MAX_LEN = 18
 
 
 class BaseWindow(QDialog):
