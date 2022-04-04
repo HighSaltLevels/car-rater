@@ -1,3 +1,4 @@
 black==21.12b0
 pylint==2.12.2
 pyinstaller==4.7
+click==8.0.2 # Pin click at version 8.0.2 for compatibility with black
