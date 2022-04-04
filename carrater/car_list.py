@@ -28,18 +28,15 @@ class CarList:
     def __str__(self):
         """Return text box friendly list of cars"""
         return_str = "\n"
-        return_str += f"{self._category}".center(83)
+        return_str += f"{self._category}".center(58)
         return_str += "\n\n"
-        return_str += 83 * "="
+        return_str += 58 * "="
         return_str += "\n"
-        return_str += (
-            "Owner                          | Year | Kind of Car                       "
-            "| Score |\n"
-        )
-        return_str += f"{83 * '-'}\n"
+        return_str += "Owner              | Year | Kind of Car          | Score |\n"
+        return_str += f"{58 * '-'}\n"
         for car in self._cars:
             return_str += (
-                f"{car.owner:30} | {car.year:4} | {car.kind:33} | {car.score:5} |\n"
+                f"{car.owner:18} | {car.year:4} | {car.kind:20} | {car.score:5} |\n"
             )
 
         return return_str

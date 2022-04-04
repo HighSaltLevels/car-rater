@@ -51,8 +51,8 @@ class MainWindow(QWidget):
 
         for text_edit in [chevies, fords, mopars, trucks, other]:
             text_edit.setFontFamily("Courier")
-            text_edit.setMinimumWidth(725)
-            text_edit.setMinimumHeight(300)
+            text_edit.setMinimumWidth(500)
+            text_edit.setMinimumHeight(200)
             text_edit.setReadOnly(True)
 
         chevies.setText(str(self.car_file.chevy_list))
